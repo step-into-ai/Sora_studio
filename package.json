@@ -1,0 +1,43 @@
+{
+  "name": "sora-video-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings=0",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\""
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@mantine/core": "^7.10.1",
+    "@mantine/dates": "^7.10.1",
+    "@mantine/hooks": "^7.10.1",
+    "@mantine/form": "^7.10.1",
+    "@mantine/notifications": "^7.10.1",
+    "@hookform/resolvers": "^3.3.4",
+    "@tanstack/react-query": "^5.35.7",
+    "dayjs": "^1.11.10",
+    "lucide-react": "^0.371.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-dropzone": "^14.2.3",
+    "react-hook-form": "^7.51.4",
+    "zustand": "^4.5.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.2",
+    "vite": "^5.2.6"
+  }
+}
