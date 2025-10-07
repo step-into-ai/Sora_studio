@@ -49,6 +49,9 @@ export const VideoSection = ({ prompt, onPromptChange }: VideoSectionProps) => {
   const [status, setStatus] = useState<Status>("idle");
   const [statusMessage, setStatusMessage] = useState<string>("");
   const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
+  const [currentVideoInfo, setCurrentVideoInfo] = useState<{ fileName?: string; mimeType?: string } | null>(
+    null
+  );
   const [controller, setController] = useState<AbortController | null>(null);
 
   useEffect(() => {
@@ -150,6 +153,7 @@ export const VideoSection = ({ prompt, onPromptChange }: VideoSectionProps) => {
     setController(abortController);
     setStatus("uploading");
     setStatusMessage("Upload läuft...");
+    setCurrentVideoInfo(null);
     setCurrentVideoUrl(null);
 
     try {
@@ -161,6 +165,8 @@ export const VideoSection = ({ prompt, onPromptChange }: VideoSectionProps) => {
 
       let videoUrl = initial.videoUrl ?? null;
       let meta = initial.meta;
+      let videoFileName = initial.videoFileName;
+      let videoMimeType = initial.videoMimeType;
 
       if (!videoUrl && initial.statusUrl) {
         setStatus("waiting");
@@ -172,6 +178,8 @@ export const VideoSection = ({ prompt, onPromptChange }: VideoSectionProps) => {
         });
 
         meta = result.meta ?? meta;
+        videoFileName = result.videoFileName ?? videoFileName;
+        videoMimeType = result.videoMimeType ?? videoMimeType;
 
         if (result.status === "failed") {
           throw new Error("Der Video-Job wurde vom Backend als fehlgeschlagen gemeldet.");
@@ -184,17 +192,29 @@ export const VideoSection = ({ prompt, onPromptChange }: VideoSectionProps) => {
         throw new Error("Die Antwort enthielt keinen Link zum Video.");
       }
 
+      const recordMeta = (() => {
+        const base: Record<string, unknown> = meta ? { ...meta } : {};
+        if (videoFileName) {
+          base.videoFileName = videoFileName;
+        }
+        if (videoMimeType) {
+          base.videoMimeType = videoMimeType;
+        }
+        return Object.keys(base).length > 0 ? base : undefined;
+      })();
+
       const record = {
         id: crypto.randomUUID(),
         prompt,
         imageName: file.name,
         videoUrl,
         createdAt: new Date().toISOString(),
-        meta: meta ?? {}
+        meta: recordMeta
       };
 
       saveVideo(record);
       setCurrentVideoUrl(videoUrl);
+      setCurrentVideoInfo({ fileName: videoFileName, mimeType: videoMimeType });
       setStatus("completed");
       setStatusMessage("Video ist fertig! Du kannst es jetzt ansehen und herunterladen.");
       notifications.show({
@@ -398,7 +418,7 @@ export const VideoSection = ({ prompt, onPromptChange }: VideoSectionProps) => {
                 <Button
                   component="a"
                   href={currentVideoUrl}
-                  download
+                  download={currentVideoInfo?.fileName || undefined}
                   target="_blank"
                   leftSection={<IconPlayerPlay size={18} />}
                 >

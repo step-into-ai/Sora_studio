@@ -12,6 +12,12 @@ import { ExternalLink as IconExternalLink, Trash2 as IconTrash2 } from "lucide-r
 import dayjs from "dayjs";
 import { useAppStore } from "../state/useAppStore";
 
+const pickMetaString = (meta: Record<string, unknown> | undefined, key: string) => {
+  if (!meta) return undefined;
+  const value = meta[key];
+  return typeof value === "string" ? value : undefined;
+};
+
 export const VideoLibrary = () => {
   const videos = useAppStore((state) => state.videoLibrary);
   const removeVideo = useAppStore((state) => state.removeVideo);
@@ -65,7 +71,11 @@ export const VideoLibrary = () => {
                 <Text size="xs" c="dimmed">
                   {dayjs(video.createdAt).format("DD.MM.YYYY HH:mm")}
                 </Text>
-                <Anchor href={video.videoUrl} download target="_blank">
+                <Anchor
+                  href={video.videoUrl}
+                  download={pickMetaString(video.meta, "videoFileName")}
+                  target="_blank"
+                >
                   Download
                 </Anchor>
               </Group>
