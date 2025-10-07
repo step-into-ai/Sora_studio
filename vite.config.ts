@@ -5,10 +5,6 @@ import react from "@vitejs/plugin-react";
 export default defineConfig(() => ({
   plugins: [react()],
   base: "/Sora_studio/",
-  build: {
-    outDir: "docs",
-    emptyOutDir: true
-  },
   server: {
     port: 5173,
     host: "0.0.0.0"
